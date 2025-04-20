@@ -1,5 +1,5 @@
 //Primitive
-
+//--------------------//
 // 7 types: String, Number, Boolean, null, undefined, Symbol, BigInt
 
 
@@ -17,6 +17,9 @@ console.log(id === anotherId)
 const bigNumber = 4564981546846543516551312n
 console.log(bigNumber)
 // console.log(anotherId)
+
+
+//------------------------------//
 //Reference Type(Non Primitive)
 
 //Array, Objects, Functions
@@ -42,3 +45,24 @@ console.log(typeof myfunction)
 // Note-> "null datatype is object"
 
 // https://262.ecma-international.org/5.1/#sec-11.4.3
+
+
+// Stack(Primitive), Heap(Non-Primitive)
+
+let myYoutubename = "worldfamous"
+let anotherName = myYoutubename
+anotherName = 'chaiorcode'
+
+console.log(myYoutubename)
+console.log(anotherName)
+
+
+let userOne = {
+    email: "user@gmail.com",
+    upi: "user@ybl",
+}
+let userTwo = userOne
+// do not getting copy but getting reference from last variable/object
+userTwo.email = "mahiraziz@gmail.com"
+console.log(userOne)
+console.log(userTwo)
