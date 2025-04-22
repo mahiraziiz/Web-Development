@@ -32,4 +32,4 @@ const  min = 10
 const max = 20
 Math.random()
 //important 
-console.log(Math.floor(Mfath.random()* (max - min + 1)) + min);
+console.log(Math.floor(Math.random()* (max - min + 1)) + min);
