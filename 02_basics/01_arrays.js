@@ -1,4 +1,4 @@
-// array
+// array Part-1
 
 const myArr = [2, 3, 5, 6, 6, 1];
 
