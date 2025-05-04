@@ -10,6 +10,7 @@ if (userEmail) {
 // falsy values
 // false, 0, -0, BinInt 0n, "", null, undefined, NaN
 
+
 //truthy values
 //true, 1, "0", "false", " ", [], {}, function(){}
 
