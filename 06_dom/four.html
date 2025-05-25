@@ -13,7 +13,7 @@
   <script>
     function addLanguage(langName) {
       const li = document.createElement("li");
-      li.innerHTML = `${langName}`;  
+      li.innerHTML = `${langName}`;
       document.querySelector(".language").appendChild(li);
     }
     addLanguage("python");
@@ -24,7 +24,7 @@
       li.appendChild(document.createTextNode(langName));
       document.querySelector(".language").appendChild(li);
     }
-    addOptimizeLanguage("golang");
+    addOptimizeLanguage("golang"); 
 
     //Edit
     const secondLang = document.querySelector("li:nth-child(2)");
