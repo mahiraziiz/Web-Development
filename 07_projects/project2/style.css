@@ -1,0 +1,12 @@
+body {
+  background-color: black;
+  color: white;
+}
+.container {
+  padding: 15px;
+  border: 2px solid red;
+}
+.btn {
+  border-color: brown;
+  background-color: blanchedalmond;
+}
