@@ -1,0 +1,33 @@
+body {
+  background-color: black;
+  color: white;
+}
+.home {
+  border: 2px solid rgb(247, 242, 242);
+  padding: 20px;
+  background-color: rgba(52, 174, 158, 0);
+  color: aquamarine;
+  display: flexbox;
+  text-decoration: none;
+}
+.channel {
+  border: 2px solid rgb(247, 242, 242);
+  padding: 20px;
+  background-color: rgba(52, 174, 158, 0);
+  text-decoration: none;
+  /* display:; */
+  color: aquamarine;
+}
+.center {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  flex-direction: column;
+}
+#clock {
+  font-size: 40px;
+  background-color: rgb(156, 139, 106);
+  padding: 20px 50px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
