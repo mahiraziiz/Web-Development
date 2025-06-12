@@ -1,0 +1,30 @@
+body {
+  background-color: black;
+  color: white;
+  padding: 20px;
+}
+.home {
+  border: 2px solid rgb(247, 242, 242);
+  padding: 20px;
+  background-color: rgba(52, 174, 158, 0);
+  color: aquamarine;
+  display: flexbox;
+  text-decoration: none;
+}
+.channel {
+  border: 2px solid rgb(247, 242, 242);
+  padding: 20px;
+  background-color: rgba(52, 174, 158, 0);
+  text-decoration: none;
+  /* display:; */
+  color: aquamarine;
+}
+.resultParas{
+    padding-top: 20px;
+}
+#wrapper{
+    border: 2px solid rgb(254, 254, 255);
+    margin: 10vh;
+    text-align: center;
+    padding: 20px;
+}

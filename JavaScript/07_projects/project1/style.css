@@ -1,0 +1,22 @@
+.button{
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    padding: 15px;
+}
+#white{
+ background-color: white;
+    color: black;
+}
+#yellow{
+    background-color: yellow;
+    color: black;
+}
+#black{
+    background-color: black;
+    color: white;
+}
+#green{
+    background-color: green;
+    color: black;
+}
