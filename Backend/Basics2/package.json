@@ -1,0 +1,17 @@
+{
+  "name": "basicmongoose",
+  "version": "1.0.0",
+  "description": "This is basics of mongoose",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "node"
+  ],
+  "author": "Mahir Aziz",
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^8.16.2"
+  }
+}
