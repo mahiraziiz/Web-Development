@@ -14,6 +14,7 @@ connectDB()
   .catch((err) => {
     console.log("MONGODB Connection failed !!", err);
   });
+
 /*
 import express from "express";
 const app = express();
