@@ -68,7 +68,8 @@ const registerUser = asyncHandler(async (req, res) => {
   ) {
     coverImageLocalPath = req.files.coverImage[0].path;
   }
-
+  // console.log("REQ.FILES:", req.files);
+  // console.log("Avatar file path:", req.files?.avatar?.[0]?.path);
   const avatar = await uploadOnCloudinary(avatarLocalPath);
 
   if (!avatar) {
@@ -89,7 +90,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     username: username.toLowerCase(),
   });
-
+  await user.save();
   const createdUser = await User.findById(user._id).select(
     "-password -refreshToken"
   );
@@ -180,7 +181,7 @@ const logoutUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", refreshToken)
+    .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, {}, "User logged Out"));
 });
 
@@ -266,7 +267,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required");
   }
 
-  const user = await User.findByIdUpdate(
+  const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set: {
@@ -294,7 +295,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   const avatar = await uploadOnCloudinary(avatarLocalPath);
 
   if (!avatar.url) {
-    throw ApiError(400, "Error while uploading on avatar");
+    throw new ApiError(400, "Error while uploading on avatar");
   }
 
   const user = await User.findByIdAndUpdate(
@@ -315,13 +316,13 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
   const coverImageLocalPath = req.file?.path;
 
   if (!coverImageLocalPath) {
-    throw new ApiError(400, "Avatar file is missing");
+    throw new ApiError(400, "Cover Image file is missing");
   }
 
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
 
   if (!coverImage.url) {
-    throw ApiError(400, "Error while uploading on Cover Image");
+    throw new ApiError(400, "Error while uploading on Cover Image");
   }
 
   const user = await User.findByIdAndUpdate(
@@ -376,9 +377,16 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
           $size: "$subscribedTo",
         },
         isSubscribed: {
-          if: { $in: [req.user?._id, "$subscribers.subscribe"] },
-          then: true,
-          then: false,
+          // if: { $in: [req.user?._id, "$subscribers.subscribe"] },
+          // then: true,
+          // then: false,
+          isSubscribed: {
+            $cond: [
+              { $in: [req.user?._id, "$subscribers.subscribe"] },
+              true,
+              false,
+            ],
+          },
         },
       },
     },
