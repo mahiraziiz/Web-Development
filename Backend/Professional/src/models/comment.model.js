@@ -4,15 +4,15 @@ import mongooseAggregatePaginate from "mongoose-paginate-v2";
 const commentSchema = new Schema(
   {
     content: {
-      type: string,
+      type: String,
       required: true,
     },
     video: {
-      type: Schema.types.objectId,
+      type: Schema.Types.ObjectId,
       ref: "Video",
     },
     owner: {
-      type: Schema.types.objectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
     },
   },
