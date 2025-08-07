@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const tweetSchema = new Schema(
   {
     content: {
-      type: string,
+      type: String, // ✅ Capital S here
       required: true,
     },
     owner: {
