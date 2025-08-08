@@ -4,9 +4,13 @@ import {
   getUserChannelSubscribers,
   toggleSubscription,
 } from "../controllers/subscription.controller.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = Router();
 
-router.route("/toggle-subscription").post(toggleSubscription);
-router.route("/get-user-channel-subscribers").get(getUserChannelSubscribers);
-router.route("/get-subscribed-channels").get(getSubscribedChannels);
+router.use(verifyJWT);  // Apply verifyJWT middleware to all routes in this file
+router
+  .route("/c/:channelId")
+  .get(getSubscribedChannels)
+  .post(toggleSubscription);
+router.route("/u/:subscriberId").get(getUserChannelSubscribers);
 export default router;

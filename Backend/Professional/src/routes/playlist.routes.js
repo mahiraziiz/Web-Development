@@ -11,11 +11,14 @@ import {
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = Router();
 
-router.route("/create-playlist").post(createPlaylist);
-router.route("/get-user/playlist").get(getUserPlaylists);
-router.route("/get-playlist-by-id").get(getPlaylistById);
-router.route("/add-video-to-playlist").patch(addVideoToPlaylist);
-router.route("/remove-video-from-playlist").patch(removeVideoFromPlaylist);
-router.route("/delete-playlist").delete(deletePlaylist);
-router.route("/update-playlist").patch(updatePlaylist);
+router.use(verifyJWT);  // Apply verifyJWT middleware to all routes in this file
+router.route("/").post(createPlaylist);
+router
+  .route("/:playlistId")
+  .get(getPlaylistById)
+  .patch(updatePlaylist)
+  .delete(deletePlaylist);
+router.route("/add/:videoId/:playlistId").patch(addVideoToPlaylist);
+router.route("/remove/:videoId/:playlistId").patch(removeVideoFromPlaylist);
+router.route("/user/:userId").get(getUserPlaylists);
 export default router;
