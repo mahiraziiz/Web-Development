@@ -15,7 +15,7 @@ const videoSchema = new Schema(
       type: String, //cloudinary url
       required: true,
     },
-    discription: {
+    description: {
       type: String, //cloudinary url
       required: true,
     },
@@ -33,7 +33,7 @@ const videoSchema = new Schema(
     },
     owner: {
       type: Schema.Types.ObjectId,
-      ref: "",
+      ref: "User",
     },
   },
   { timestamps: true }

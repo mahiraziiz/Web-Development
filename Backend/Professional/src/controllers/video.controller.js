@@ -1,11 +1,9 @@
-import mongoose, { isValidObjectId } from "mongoose";
+import { isValidObjectId } from "mongoose";
 import { Video } from "../models/video.model.js";
-import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import { loadConfigFromFile } from "vite";
 
 const getAllVideos = asyncHandler(async (req, res) => {
   // 1️⃣ Extract query params with defaults
@@ -72,10 +70,10 @@ const publishAVideo = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
   // TODO: get video, upload to cloudinary, create video
   if (!title || !description) {
-    return new ApiError(200, "Title and description are required");
+    throw new ApiError(500, "Title and description are required");
   }
 
-  const localVideoPath = req.file?.path;
+  const localVideoPath = req.files?.videoFile?.[0]?.path;
   if (!localVideoPath) {
     throw new ApiError(400, "Video file is required");
   }
@@ -86,25 +84,31 @@ const publishAVideo = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Video upload failed");
   }
 
-  // Optionally handle thumbnail (if uploaded in request)
-  let uploadedThumbnail = null;
-  if (req.body.thumbnailPath) {
-    uploadedThumbnail = await uploadOnCloudinary(req.body.thumbnailPath);
+  const localThumbnailPath = req.files?.thumbnail?.[0]?.path;
+  if (!localThumbnailPath) {
+    throw new ApiError(400, "Thumbnail is required");
   }
 
+  const uploadedThumbnail = await uploadOnCloudinary(localThumbnailPath);
+  if (!uploadedThumbnail) {
+    throw new ApiError(500, "Thumbnail upload failed");
+  }
+  const duration = uploadedVideo.duration;
+
   const videoData = await Video.create({
-    videoFile: uploadedVideo.url,
-    thumbnail: uploadedThumbnail?.url || "",
     title,
     description,
-    owner: req.user._id, // assuming user is authenticatedv
+    duration,
+    videoFile: uploadedVideo.url,
+    thumbnail: uploadedThumbnail?.url || "",
+    owner: req.user._id, // assuming user is authenticated
   });
 
   await videoData.save();
 
   return res
     .status(201)
-    .json(new ApiResponse(201, newVideo, "Video uploaded successfully"));
+    .json(new ApiResponse(201, videoData, "Video uploaded successfully"));
 });
 
 const getVideoById = asyncHandler(async (req, res) => {
@@ -117,7 +121,7 @@ const getVideoById = asyncHandler(async (req, res) => {
   const videoData = await Video.findById(videoId);
 
   if (!videoData) {
-    return new ApiError(404, "Video not found");
+    throw new ApiError(404, "Video not found");
   }
 
   return res
@@ -126,7 +130,7 @@ const getVideoById = asyncHandler(async (req, res) => {
 });
 
 const updateVideo = asyncHandler(async (req, res) => {
-  const { videoId } = req.params; // renamed for clarity
+  const { videoId } = req.params;
   const { title, description } = req.body;
 
   if (!isValidObjectId(videoId)) {
@@ -164,13 +168,13 @@ const deleteVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   //TODO: delete video
   if (!isValidObjectId(videoId)) {
-    return new ApiError(404, "Invalid videoId");
+    throw new ApiError(404, "Invalid videoId");
   }
 
   const videoData = await Video.findById(videoId);
 
   if (!videoData) {
-    return new ApiError(400, "Not found");
+    throw new ApiError(400, "Not found");
   }
   // Delete from Cloudinary (if stored there)
   if (videoData.public_id) {
@@ -187,13 +191,13 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
 
   if (!isValidObjectId(videoId)) {
-    return new ApiError(200, "Invalid Video ID");
+    throw new ApiError(200, "Invalid Video ID");
   }
 
   const videoData = await Video.findById(videoId);
 
   if (!videoData) {
-    return new ApiError(200, "Video not found");
+    throw new ApiError(200, "Video not found");
   }
 
   // Toggle the value

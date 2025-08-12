@@ -9,6 +9,8 @@ import mongoose from "mongoose";
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
+    // console.log("Fetched User:", user);
+    // console.log("User methods:", typeof user.generateAccessToken, typeof user.generateRefreshToken);
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
 
@@ -17,6 +19,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
     return { accessToken, refreshToken };
   } catch (error) {
+    // console.log(error);
     throw new ApiError(
       500,
       "Something went wrong while generating referesh and access token"
@@ -123,7 +126,7 @@ const loginUser = asyncHandler(async (req, res) => {
   });
 
   if (!user) {
-    throw new ApiError("User does not exist");
+    throw new ApiError(404, "User does not exist");
   }
 
   const isPasswordValid = await user.isPasswordCorrect(password);
@@ -240,10 +243,10 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 
   // }
   const user = await User.findById(req.user?._id);
-  const ispasswordCorrect = await user.isPasswordCorrect(oldPassword);
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
 
-  if (!ispasswordCorrect) {
-    throw new ApiError();
+  if (!isPasswordCorrect) {
+    throw new ApiError(404, "Old password in not correct");
   }
 
   user.password = newPassword;
@@ -365,7 +368,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         from: "subscriptions", // fix collection name
         localField: "_id",
         foreignField: "subscriber",
-        as: "subscribers",
+        as: "subscribedTo",
       },
     },
     {
@@ -380,13 +383,12 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
           // if: { $in: [req.user?._id, "$subscribers.subscribe"] },
           // then: true,
           // then: false,
-          isSubscribed: {
-            $cond: [
-              { $in: [req.user?._id, "$subscribers.subscribe"] },
-              true,
-              false,
-            ],
-          },
+
+          $cond: [
+            { $in: [req.user?._id, "$subscribers.subscribe"] },
+            true,
+            false,
+          ],
         },
       },
     },
@@ -394,12 +396,12 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
       $project: {
         fullName: 1,
         username: 1,
-        subscribersCount: 1,
-        channelSubscribedToCount: 1,
-        isSubscribed: 1,
+        email: 1,
         avatar: 1,
         coverImage: 1,
-        email: 1,
+        channelSubscribedToCount: 1,
+        subscribersCount: 1,
+        isSubscribed: 1,
       },
     },
   ]);
