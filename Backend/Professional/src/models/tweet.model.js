@@ -6,6 +6,7 @@ const tweetSchema = new Schema(
       type: String, // ✅ Capital S here
       required: true,
     },
+    
     owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
